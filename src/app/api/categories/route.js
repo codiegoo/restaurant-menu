@@ -14,7 +14,7 @@ export async function GET(req) {
 }
 
 export async function POST(req) {
-  const { name, image } = await req.json();
+  const { name, image, description } = await req.json();
   if (!name || !image) {
     return new Response(JSON.stringify({ error: 'El nombre y la imagen son obligatorios' }), { status: 400 });
   }
@@ -23,6 +23,7 @@ export async function POST(req) {
       data: {
         name,
         image,
+        description
       },
     });
     return new Response(JSON.stringify(newCategory), { status: 201 });
@@ -33,7 +34,7 @@ export async function POST(req) {
 }
 
 export async function PUT(req) {
-  const { id, name, image } = await req.json();
+  const { id, name, image, description } = await req.json();
   if (!id) {
     return new Response(JSON.stringify({ error: 'El ID de la categoría es obligatorio' }), { status: 400 });
   }
@@ -43,6 +44,7 @@ export async function PUT(req) {
       data: {
         ...(name && { name }),
         ...(image && { image }),
+        ...(description && { description })
       },
     });
     return new Response(JSON.stringify(updatedCategory), { status: 200 });

@@ -17,6 +17,7 @@ datasource db {
 model Category {
   id        Int      @id @default(autoincrement())
   name      String   @unique
+  description String @default("Sin descripción")
   image     String   // URL de la imagen para la categoría
   dishes    Dish[]   // Relación uno a muchos con Dish
   createdAt DateTime @default(now())
@@ -26,6 +27,7 @@ model Category {
 model Dish {
   id          Int      @id @default(autoincrement())
   name        String
+  description String @default("Sin descripción")
   price       Float
   image       String   // URL de la imagen para el platillo
   categoryId  Int      // Clave foránea que referencia a Category

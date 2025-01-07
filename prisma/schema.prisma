@@ -1,9 +1,3 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
-// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
-// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
-
 generator client {
   provider = "prisma-client-js"
 }
@@ -13,25 +7,24 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-
 model Category {
-  id        Int      @id @default(autoincrement())
-  name      String   @unique
-  description String @default("Sin descripción")
-  image     String   // URL de la imagen para la categoría
-  dishes    Dish[]   // Relación uno a muchos con Dish
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  id          Int      @id @default(autoincrement())
+  name        String   @unique
+  image       String
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  description String   @default("Sin descripción")
+  dishes      Dish[]
 }
 
 model Dish {
   id          Int      @id @default(autoincrement())
   name        String
-  description String @default("Sin descripción")
   price       Float
-  image       String   // URL de la imagen para el platillo
-  categoryId  Int      // Clave foránea que referencia a Category
-  category    Category @relation(fields: [categoryId], references: [id]) // Relación con Category
+  image       String
+  categoryId  Int
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
+  description String   @default("Sin descripción")
+  category    Category @relation(fields: [categoryId], references: [id])
 }

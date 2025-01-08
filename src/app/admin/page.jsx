@@ -10,6 +10,7 @@ export default function admin() {
 
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [credentials, setCredentials] = useState({ username: '', password: '' });
+  const [selectedCategoryId, setSelectedCategoryId] = useState(null);
 
   const handleLogin = async (e) => {
     e.preventDefault();
@@ -25,6 +26,10 @@ export default function admin() {
     } else {
       alert('Credenciales incorrectas');
     }
+  };
+
+  const handleCategoryClick = (categoryId) => {
+    setSelectedCategoryId(categoryId); // Actualiza la categoría seleccionada
   };
 
   if (!isAuthenticated) {
@@ -63,8 +68,8 @@ export default function admin() {
         <button onClick={() => setIsAuthenticated(false)}>Cerrar Sesión</button>
       </header>
       <section className="adminInner">
-        <AdminCategory/>
-        <AdminDishes/>
+        <AdminCategory onCategoryClick={handleCategoryClick}/>
+        <AdminDishes selectedCategoryId={selectedCategoryId}/>
       </section>
     </div>
   );

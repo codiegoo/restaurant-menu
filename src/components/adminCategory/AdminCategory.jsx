@@ -5,7 +5,7 @@ import { useState } from 'react';
 import { useEffect } from 'react';
 import CategoryForm from './CategoryForm';
 
-export default function AdminCategory() {
+export default function AdminCategory({ onCategoryClick }) {
 
   const [categories, setCategories] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -93,7 +93,7 @@ export default function AdminCategory() {
         <p>Cargando categorías...</p>
       ) : (
         categories.map((category) => (
-          <div className="categoryInner" key={category.id}>
+          <div className="categoryInner" key={category.id} onClick={() => onCategoryClick(category.id)}>
             <Image
               src={category.image}
               alt={category.name}

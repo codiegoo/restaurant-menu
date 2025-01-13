@@ -3,7 +3,6 @@
 import prisma from '@/lib/prisma.js'; // Asegúrate de que la ruta sea correcta
 
 export async function GET(req) {
-  console.log('Handler de categorías cargado');
   try {
     const categories = await prisma.category.findMany();
     return new Response(JSON.stringify(categories), { status: 200 });

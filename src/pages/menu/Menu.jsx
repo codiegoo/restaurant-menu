@@ -2,66 +2,84 @@
 'use client'
 import CategorySlider from "@/components/menu/Category";
 import DishGrid from "@/components/menu/DishGrid";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import './menu.sass'
 
-const categories = [
-  { id: 1, name: "Bebidas", image: "/images/category/bebidas.png" },
-  { id: 2, name: "Cafes", image: "/images/category/cafeCalente.png" },
-  { id: 3, name: "Cafes Frios", image: "/images/category/cafeFrio.png" },
-  { id: 4, name: "Panaderia", image: "/images/category/panaderia.png" },
-  { id: 5, name: "Platillos", image: "/images/category/platillos.png" },
-  { id: 6, name: "Postres", image: "/images/category/postres.png" }
-];
-
-const dishes = {
-  1: [
-    { name: "Coca-cola 600ml", price: "$50", image: "/images/dishes/cocacola.jpg" },
-    { name: "Té Verde 600ml", price: "$45", image: "/images/dishes/teVerde.jpg" },
-    { name: "Matcha 600ml", price: "$65", image: "/images/dishes/matcha.jpg" },
-    { name: "Agua natural 1L", price: "$15", image: "/images/dishes/aguaNatural.jpg" },
-    { name: "Limonada 600ml", price: "$35", image: "/images/dishes/limonada.jpg" },
-    { name: "Jugo verde 600ml", price: "$60", image: "/images/dishes/jugoVerde.jpg" },
-    { name: "Jugo verde 600ml", price: "$60", image: "/images/dishes/jugoVerde.jpg" }
-  ],
-  2: [
-    { name: "Enchiladas", price: "$120" },
-    { name: "Chiles Rellenos", price: "$150" },
-  ],
-  3: [
-    { name: "Pastel de Chocolate", price: "$80" },
-    { name: "Helado", price: "$60" },
-  ],
-  4: [
-    { name: "Hamburguesa Kids", price: "$90" },
-    { name: "Deditos de Pollo", price: "$70" },
-  ],
-  5: [
-    { name: "Hamburguesa Kids", price: "$90" },
-    { name: "Deditos de Pollo", price: "$70" },
-  ],
-  6: [
-    { name: "Hamburguesa Kids", price: "$90" },
-    { name: "Deditos de Pollo", price: "$70" },
-  ],
-};
 
 export default function Menu() {
   const [selectedCategory, setSelectedCategory] = useState(1);
+  const [categories, setCategories] = useState([]);
+  const [dishes, setDishes] = useState({});
+  const [loadingCategories, setLoadingCategories] = useState(true);
+  const [loadingDishes, setLoadingDishes] = useState(false);
+
+  // Cargar las categorías al montar el componente
+  useEffect(() => {
+    async function fetchCategories() {
+      try {
+        setLoadingCategories(true);
+        const res = await fetch('/api/categories');
+        if (!res.ok) throw new Error('Error al cargar categorías');
+        const data = await res.json();
+        setCategories(data);
+        // Selecciona la primera categoría automáticamente
+        if (data.length > 0) setSelectedCategory(data[0].id);
+      } catch (error) {
+        console.error('Error al cargar categorías:', error.message);
+      } finally {
+        setLoadingCategories(false);
+      }
+    }
+
+    fetchCategories();
+  }, []);
+
+  // Cargar los platillos cada vez que se seleccione una categoría
+  useEffect(() => {
+    if (!selectedCategory) return;
+
+    async function fetchDishes() {
+      try {
+        setLoadingDishes(true);
+        const res = await fetch(`/api/dishes?categoryId=${selectedCategory}`);
+        if (!res.ok) throw new Error('Error al cargar platillos');
+        const data = await res.json();
+        setDishes((prevDishes) => ({
+          ...prevDishes,
+          [selectedCategory]: data,
+        }));
+      } catch (error) {
+        console.error('Error al cargar platillos:', error.message);
+      } finally {
+        setLoadingDishes(false);
+      }
+    }
+
+    // Evita cargar si los platillos ya están en el estado
+    if (!dishes[selectedCategory]) fetchDishes();
+  }, [selectedCategory]);
+
 
   return (
     <div className="menuContain">
       <h2>Nuestro Menu</h2>
 
       <div className="menuInner">
-        <CategorySlider
-          categories={categories}
-          selectedCategory={selectedCategory}
-          onSelectCategory={setSelectedCategory}
-        />
+        {loadingCategories ? (
+          <p>Cargando categorías...</p>
+        ) : (
+          <CategorySlider
+            categories={categories}
+            selectedCategory={selectedCategory}
+            onSelectCategory={setSelectedCategory}
+          />
+        )}
 
-        {/* Grid de Platillos */}
-        <DishGrid dishes={dishes[selectedCategory]} />
+        {loadingDishes ? (
+          <p>Cargando platillos...</p>
+        ) : (
+          <DishGrid dishes={dishes[selectedCategory] || []} />
+        )}
       </div>
     </div>
   );

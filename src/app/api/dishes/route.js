@@ -43,9 +43,9 @@ export async function GET(req) {
 }
 
 export async function POST(req) {
-  const { name, price, image, categoryId } = await req.json();
+  const { name, price, image, categoryId,description, extras } = await req.json();
 
-  if (!name || !price || !image || !categoryId) {
+  if (!name || !price || !image || !categoryId || !description || !extras) {
     return new Response(JSON.stringify({ error: 'Todos los campos son obligatorios' }), { status: 400 });
   }
 
@@ -55,7 +55,9 @@ export async function POST(req) {
         name,
         price: parseFloat(price),
         image,
-        categoryId: parseInt(categoryId)
+        categoryId: parseInt(categoryId),
+        description,
+        extras
       },
     });
     return new Response(JSON.stringify(newDish), { status: 201 });
@@ -66,7 +68,7 @@ export async function POST(req) {
 }
 
 export async function PUT(req) {
-  const { id, name, price, image, categoryId } = await req.json();
+  const { id, name, price, image, categoryId, description, extras } = await req.json();
 
   if (!id) {
     return new Response(JSON.stringify({ error: 'El ID del platillo es obligatorio' }), { status: 400 });
@@ -79,7 +81,9 @@ export async function PUT(req) {
         ...(name && { name }),
         ...(price && { price: parseFloat(price) }),
         ...(image && { image }),
-        ...(categoryId && { categoryId }),
+        ...(categoryId && { categoryId: parseInt(categoryId) }),
+        ...(description && {description}),
+        ...(extras && {extras})
       },
     });
 

@@ -2,13 +2,34 @@
   background: #efefef
   width: 100%
   text-align: center
-  padding-top: 2%
+  padding-top: 5%
   .contactInner
     display: flex
     flex-direction: row
+    align-items: center
     width: 80%
     margin: 0 auto
     padding-bottom: 2%
+    gap: 5%
+    iframe
+      width: 50%
+    .contactText
+      width: 50%
+      .btnContacto
+        display: flex
+        gap: 5%
+        width: 100%
+        justify-content: center
+        button
+          width: 25%
+          height: 2.5rem
+          border: none
+          background: #000
+          a
+            color: #fff
+            text-decoration: none
+        button:hover
+          background: #2f2f2f
   .reservationInner
     .imageLocate
       background-image: url('/images/lugar.png')

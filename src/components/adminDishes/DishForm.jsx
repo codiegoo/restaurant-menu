@@ -5,6 +5,7 @@ export default function DishForm({ mode, dish,categoryId, onClose, onSubmit }) {
   const [name, setName] = useState(dish?.name || '');
   const [price, setPrice] = useState(dish?.price || '');
   const [description, setDescription] = useState(dish?.description || '');
+  const [extras, setExtras] = useState(dish?.extras || '');
   const [image, setImage] = useState(dish?.image || '');
 
   const handleSubmit = async (e) => {
@@ -13,8 +14,8 @@ export default function DishForm({ mode, dish,categoryId, onClose, onSubmit }) {
     const endpoint = '/api/dishes';
     const method = mode === 'edit' ? 'PUT' : 'POST';
     const body = mode === 'edit' 
-      ? JSON.stringify({ id: dish.id, name, price, description, image })
-      : JSON.stringify({ name, price, description, image, categoryId });
+      ? JSON.stringify({ id: dish.id, name, price, description,extras , image })
+      : JSON.stringify({ name, price, description, extras, image, categoryId });
 
     try {
       const response = await fetch(endpoint, {
@@ -40,6 +41,7 @@ export default function DishForm({ mode, dish,categoryId, onClose, onSubmit }) {
   return(
     <section className="formCategoryContain">
       <form className="categoryForm" onSubmit={handleSubmit}>
+        <h5>Platillos</h5>
         <input
           type="text"
           placeholder="Nombre:"
@@ -54,11 +56,19 @@ export default function DishForm({ mode, dish,categoryId, onClose, onSubmit }) {
           onChange={(e) => setPrice(e.target.value)}
           required
         />
-        <input
+        <textarea
+          className='inputDescription'
           type="text"
           placeholder="Descripción:"
           value={description}
           onChange={(e) => setDescription(e.target.value)}
+        />
+        <textarea
+          className='inputDescription'
+          type="text"
+          placeholder="Extras:"
+          value={extras}
+          onChange={(e) => setExtras(e.target.value)}
         />
         <input
           type="text"

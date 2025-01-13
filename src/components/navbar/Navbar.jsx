@@ -1,14 +1,24 @@
 import Image from "next/image";
-import NavList from "./NavList";
 import "./nav.sass"
 
 
-export default function Navbar() {
+
+export default function Navbar({ inicioRef, aboutRef, menuRef, contactoRef }) {
+
+  const handleScroll = (ref) => {
+    if (ref && ref.current) {
+      ref.current.scrollIntoView({ behavior: "smooth" });
+    }
+  };
 
   return(
-    <nav>
-      <Image src="/images/logo.png" width="80" height="80" alt="Logotipo de la cafeteria"/>
-      <NavList/>
+    <nav >
+      <Image onClick={() => handleScroll(inicioRef)} style={{ cursor: "pointer" }} src="/images/logo.png" width={60} height={60} alt="Logotipo de la cafetería" />
+      <ul className="navList">
+        <li onClick={() => handleScroll(aboutRef)}>Nosotros</li>
+        <li >Menu</li>
+        <li onClick={() => handleScroll(contactoRef)}>Contacto</li>
+      </ul>
     </nav>
   )
 }

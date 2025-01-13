@@ -26,5 +26,6 @@ model Dish {
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
   description String   @default("Sin descripción")
+  extras String   @default("Sin extras para agregar")
   category    Category @relation(fields: [categoryId], references: [id])
 }

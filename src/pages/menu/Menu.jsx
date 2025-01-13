@@ -4,6 +4,7 @@ import CategorySlider from "@/components/menu/Category";
 import DishGrid from "@/components/menu/DishGrid";
 import { useState, useEffect } from "react";
 import './menu.sass'
+import DishDetail from "@/components/dishDetails/DishDetail";
 
 
 export default function Menu() {
@@ -12,6 +13,7 @@ export default function Menu() {
   const [dishes, setDishes] = useState({});
   const [loadingCategories, setLoadingCategories] = useState(true);
   const [loadingDishes, setLoadingDishes] = useState(false);
+  const [selectedDish, setSelectedDish] = useState(null);
 
   // Cargar las categorías al montar el componente
   useEffect(() => {
@@ -63,6 +65,7 @@ export default function Menu() {
   return (
     <div className="menuContain">
       <h2>Nuestro Menu</h2>
+      <p>Puedes hacer click en cualquier platillo para ver sus detalles.</p>
 
       <div className="menuInner">
         {loadingCategories ? (
@@ -78,9 +81,14 @@ export default function Menu() {
         {loadingDishes ? (
           <p>Cargando platillos...</p>
         ) : (
-          <DishGrid dishes={dishes[selectedCategory] || []} />
+          <DishGrid dishes={dishes[selectedCategory] || []} onDishClick={setSelectedDish} />
         )}
       </div>
+
+      {/* Modal de detalles del platillo */}
+      {selectedDish && (
+        <DishDetail dish={selectedDish} onClose={() => setSelectedDish(null)} />
+      )}
     </div>
   );
 }

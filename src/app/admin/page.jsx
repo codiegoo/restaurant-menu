@@ -28,6 +28,11 @@ export default function admin() {
     }
   };
 
+  const handleLogout = () => {
+    setIsAuthenticated(false);
+    setCredentials({ username: '', password: '' }); // Vacía las credenciales
+  };
+
   const handleCategoryClick = (categoryId) => {
     setSelectedCategoryId(categoryId); // Actualiza la categoría seleccionada
   };
@@ -65,7 +70,7 @@ export default function admin() {
     <div className="adminContain">
       <header>
         <h2>Panel de Administración</h2>
-        <button onClick={() => setIsAuthenticated(false)}>Cerrar Sesión</button>
+        <button onClick={handleLogout}>Cerrar Sesión</button>
       </header>
       <section className="adminInner">
         <AdminCategory onCategoryClick={handleCategoryClick}/>
